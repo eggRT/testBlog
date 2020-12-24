@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>Profile</h1>
+
+<br/>
+
+<div class="card mb-3" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+
+	{% if page_user.profilePic %}
+      <img src="{{ page_user.profilePic.url }}" width="100" height="130">
+  	{% else %}
+  		<img src="{% static 'testBlog/images/default_user_img.png' %}" width="100" height="100">
+
+	{% endif %}
+
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{ page_user.user }}</h5>
+
+        {% if page_user.linkvk %}
+        <p class="small text-muted">
+        	<a href="{{ page_user.linkvk }}">vk</a>
+    	</p>
+    	{% endif %}
+
+        <p class="card-text">{{ page_user.status }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if user.id == profile.user.id %}
+<a href="{% url 'changeprofile' %}">Settings</a>
+<a href="{% url 'edit_profile_page' user.profile.id %}">Edit profile</a>
+{% endif %}
+
+{% endblock %}

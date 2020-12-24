@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ namecat }}
+{% endblock%}
+
+{% block content %}
+
+{% if category_posts %}
+
+<h3>{{namecat}}</h3>
+{% for post in  category_posts %}
+<li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a> - {{ post.author }}<br/>
+{{ post.textPost}}</li>
+
+{% endfor%}
+
+{% else %}
+sory, this page don`t available
+{% endif %}
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{{ post.title }}
+{% endblock%}
+
+{% block content %}
+<h1>{{ post.title }}</h1>
+<br/>
+<h5>{{ post.textPost|safe }}</h5>
+<br/>
+{% if post.imagePost %}
+<img src="{{ post.imagePost.url }}">
+{% endif %}
+<hr>
+<small>	By: {{ post.author}} <br/>
+		Category: {{ post.category }}	<br/>
+		Date: {{ post.datepublished }}	<br/>
+</small>
+<br/>
+	<a href="{% url 'home' %}" class="btn btn-outline-secondary">Back</a>
+{% if user.is_authenticated %}
+	{% if user.id == post.author.id %}
+	<a href="{% url 'editPost' post.pk %}" class="btn btn-outline-secondary">Edit</a>
+	{% endif %}
+{% endif %}
+<br/>
+<br/>
+
+
+<form action="{% url 'like_post' post.pk %}" method="POST">
+	{% csrf_token %}
+
+	{% if user.is_authenticated %}
+	{% if liked %}
+	<button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-danger btn-sm">Unlike</button> - 
+	{% else %}
+	<button type="submit", name="post_id", value="{{ post.id }}", class="btn btn-primary btn-sm">Like</button> - 
+	{% endif %}
+	{% endif %}
+
+	{{ total_likes}} Likes
+</form>
+
+<br/><br/>
+<h2>Comments</h2>
+<br/>
+<a href="{% url 'add_comment' post.pk %}">Add comment</a>
+<br/>
+{% if not post.comments.all %}
+No commnet
+{% else %}
+{% for comment in post.comments.all %}
+<strong>
+  <img src="{{ comment.name.profile.profilePic.url }}" width = "20" height="20">
+  <a href="{% url 'profile_page' comment.name.profile.id %}">{{ comment.name }}</a>
+  {{ comment.date_added }}
+</strong>
+<br/>
+{{ comment.textComment }}
+<br/>
+{% endfor %}
+{% endif %}
+
+
+<br/><br/>
+<div class="card mb-3" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+
+	{% if post.author.profile.profilePic %}
+      <img src="{{ post.author.profile.profilePic.url }}" width="100" height="130">
+  	{% else %}
+  		<img src="{% static 'testBlog/images/default_user_img.png' %}" width="100" height="100">
+
+	{% endif %}
+
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title"><a href="{% url 'profile_page' post.author.profile.id %}">{{ post.author }}</a></h5>
+
+        {% if post.author.profile.linkvk %}
+        <p class="small text-muted">
+        	<a href="{{ post.author.profile.linkvk }}">vk</a>
+    	</p>
+    	{% endif %}
+
+        <p class="card-text">{{ post.author.profile.status }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<br/>
+<br/>
+
+
+
+{% endblock %}

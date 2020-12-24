@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Delete Post
+{% endblock%}
+
+{% block content %}
+{% if user.is_authenticated %}
+	{% if user.id == post.author.id %}
+<div class="form-group">
+<form method="POST">
+	{% csrf_token %}
+	<h1>{{ post.title }}</h1>
+	<button class="btn btn-outline-secondary">Deleted</button>
+</div>
+	{% else %}
+	This page is not available
+	{% endif %}
+
+{% else %}
+<h1>You are not authorisated^)</h1>
+{% endif %}
+
+{% endblock %}
